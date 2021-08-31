@@ -7,12 +7,14 @@ public class Player : MonoBehaviour
 {
 
     NavMeshAgent _agent;
-    
+    Animator _playerAnimator;
+    Vector3 _hitpoint;
     
     // Start is called before the first frame update
     void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _playerAnimator = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -24,11 +26,20 @@ public class Player : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(rayOrigin, out hit))
             {
-                Debug.Log(hit.point);
+                
                 _agent.SetDestination(hit.point);
+                _playerAnimator.SetBool("Walk", true);
+                _hitpoint = hit.point;
             }
         }
-       
 
+        float dis = Vector3.Distance(transform.position, _hitpoint);
+        print(dis);
+
+        if(dis < 1.5f)
+        {
+            print("Idle");
+            _playerAnimator.SetBool("Walk", false);
+        }
     }
 }
